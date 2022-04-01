@@ -4,8 +4,16 @@
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 import { ethers } from "hardhat";
+import web3 from "web3";
+import * as dotenv from "dotenv";
+import {Contract, ContractFactory} from "ethers";
+
+
+dotenv.config();
 
 async function main() {
+  let mainAdmin: string = web3.utils.keccak256("admin");
+  let baseURL: string ="https://ipfs.io/ipfs/"
   // Hardhat always runs the compile task when running scripts with its command
   // line interface.
   //
@@ -14,12 +22,12 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Greeter = await ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello, Hardhat!");
+  const MyERC1155: ContractFactory = await ethers.getContractFactory("MyERC1155");
+  const myERC1155: Contract = await MyERC1155.deploy("MyERC1155", "MRCNF", mainAdmin, process.env.PUBLIC_KEY, baseURL);
 
-  await greeter.deployed();
+  await myERC1155.deployed();
 
-  console.log("Greeter deployed to:", greeter.address);
+  console.log("MyERC1155 deployed to:", myERC1155.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
